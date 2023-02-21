@@ -1,21 +1,42 @@
 import os
+from datetime import datetime
+
+ALLOWED_EXTENSIONS = ('.JPG', '.JPEG', '.PNG', '.GIF', '.BMP')
+DEFAULT_SOURCE_DIR = os.curdir
+DEFAULT_DESTINATION_DIR = os.curdir
+
 
 class Renamer:
-    def __init__(self, *, dir=os.curdir) -> None:
-        self.dir = dir
+    def __init__(self,source_dir=DEFAULT_SOURCE_DIR, destination_dir=DEFAULT_DESTINATION_DIR) -> None:
+        self.source_dir = source_dir
+        self.destination_dir = destination_dir
 
     @classmethod
     def comandline_setup(cls):
         """
         Providing a base setup to use the Renamer via the comandline.
         """
-        dir = input('Input the directory where files have to be renamed:\n')
-        dir = os.path.abspath(dir)
-        if os.path.isdir(dir):
-            print(f'Dir "{dir}" exists')
+        source_dir = input('Input the directory where files have to be renamed:\n')
+        source_dir = os.path.abspath(source_dir)
+        if os.path.isdir(source_dir):
+            print(f'Dir "{source_dir}" exists')
 
-        return cls(dir=dir)
+        return cls(source_dir=source_dir)
+
+    def rename(self):
+        """
+        Renames all files in the directory.
+        """
+        print('Renaming files')
+        for filename in os.listdir(self.source_dir):
+            if filename.endswith(ALLOWED_EXTENSIONS):
+                print(f'Renaming {filename}...')
+                c_date = os.path.getctime(os.path.join(self.source_dir, filename))
+                print(c_date)
+                print(datetime.utcfromtimestamp(c_date).strftime('%Y-%m-%d %H:%M:%S'))
+
 
 if __name__ == '__main__':
-    print('Hello')
+    print('Welcome to the Renamer!\n')
     ren = Renamer.comandline_setup()
+    ren.rename()
