@@ -30,10 +30,17 @@ class Renamer:
         print('Renaming files')
         for filename in os.listdir(self.source_dir):
             if filename.endswith(ALLOWED_EXTENSIONS):
-                print(f'Renaming {filename}...')
-                c_date = os.path.getctime(os.path.join(self.source_dir, filename))
-                print(c_date)
-                print(datetime.utcfromtimestamp(c_date).strftime('%Y-%m-%d %H:%M:%S'))
+                print(f'\nRenaming {filename} ...')
+
+                # # Get the metadata change time
+                # c_date = os.path.getctime(os.path.join(self.source_dir, filename))
+                # print(f"Creation date: {c_date}")
+                # print(datetime.utcfromtimestamp(c_date).strftime('%Y-%m-%d %H:%M:%S'))
+
+                # Get the last modification time
+                m_date = os.path.getmtime(os.path.join(self.source_dir, filename))
+                print(f"Modified date: {m_date}")
+                print(datetime.utcfromtimestamp(m_date).strftime('%Y-%m-%d %H:%M:%S'))
 
 
 if __name__ == '__main__':
