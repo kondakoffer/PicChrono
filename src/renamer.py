@@ -1,9 +1,17 @@
 import os
 from datetime import datetime
+import PIL.Image
+from PIL.ExifTags import Base
+import base64
+
 
 ALLOWED_EXTENSIONS = ('.JPG', '.JPEG', '.PNG', '.GIF', '.BMP')
 DEFAULT_SOURCE_DIR = os.curdir
 DEFAULT_DESTINATION_DIR = os.curdir
+
+DATE_TIME_TAG_ID = 306
+DATE_TIME_ORIGIGNAL_TAG_ID = 36867
+PREVIEW_DATE_TIME_TAG_ID = 50971
 
 
 class Renamer:
@@ -42,8 +50,42 @@ class Renamer:
                 print(f"Modified date: {m_date}")
                 print(datetime.utcfromtimestamp(m_date).strftime('%Y-%m-%d %H:%M:%S'))
 
+    # FIXME
+    def _get_exif_data(self, filename:str):
+        f = os.path.abspath(filename)
+        img = PIL.Image.open(f)
+        exif_data = img.getexif()
+
+        for tag_id in exif_data:
+            # get the tag name, instead of human unreadable tag id
+            if tag_id == 50341:
+                print(f"{tag_id}: {type(exif_data.get(tag_id))}")
+                continue
+            # tag = Base(tag_id).name
+            data = exif_data.get(tag_id)
+            # decode bytes 
+            if isinstance(data, bytes):
+                # data = data.partition(b" ")[1]
+                # print(data.partition(b" "))
+                data = data.decode("mac-roman")
+                # data = data.decode('latin-1')
+            print(f"{tag_id}: {data}")
+
+    # FIXME
+    def get_exif_datetime(self, filename):
+        date_time_tag_id = 36867
+        f = os.path.abspath(filename)
+        img = PIL.Image.open(f)
+        exif_data = img.getexif()
+        date_time = exif_data.get(DATE_TIME_TAG_ID)
+        return date_time
+
+# if __name__ == '__main__':
+#     print('Welcome to the Renamer!\n')
+#     ren = Renamer.comandline_setup()
+#     ren.rename()
 
 if __name__ == '__main__':
-    print('Welcome to the Renamer!\n')
-    ren = Renamer.comandline_setup()
-    ren.rename()
+    ren = Renamer()
+    print(ren._get_exif_data("test_files/_DSC2428.JPG"))
+
