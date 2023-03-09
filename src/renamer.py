@@ -3,16 +3,17 @@ from datetime import datetime
 import PIL.Image
 from PIL.ExifTags import Base
 import base64
+import enum
 
 
 ALLOWED_EXTENSIONS = ('.JPG', '.JPEG', '.PNG', '.GIF', '.BMP')
 DEFAULT_SOURCE_DIR = os.curdir
 DEFAULT_DESTINATION_DIR = os.curdir
 
-
-DATE_TIME_TAG_ID = 0x0132               # Exif tag ID for date and time
-DATE_TIME_ORIGIGNAL_TAG_ID = 0x9003     # Exif tag ID for date and time of original image (time when image was taken)
-DATE_TIME_DIGITIZED_TAG_ID = 0x9004     # Exif tag ID for date and time of digital image (time when image was stored as digital data)
+class ExifDateTags(enum.IntEnum):
+    DATE_TIME_TAG_ID = 0x0132               # 306:      Exif tag ID for date and time
+    DATE_TIME_ORIGIGNAL_TAG_ID = 0x9003     # 36867:    Exif tag ID for date and time of original image (time when image was taken)
+    DATE_TIME_DIGITIZED_TAG_ID = 0x9004     # 36868:    Exif tag ID for date and time of digital image (time when image was stored as digital data)
 
 
 class Renamer:
@@ -53,35 +54,19 @@ class Renamer:
             else:
                 print(f'\nFile {filename} has an unsupported file extension')
 
-    # FIXME
-    def _get_exif_data(self, filename:str):
+    #
+    def _get_exif_datetimes(self, filename:str) -> list[tuple[int, str, str]]:
         f = os.path.abspath(filename)
         img = PIL.Image.open(f)
         exif_data = img.getexif()
-
+        date_times = []
         for tag_id in exif_data:
-            # get the tag name, instead of human unreadable tag id
-            if tag_id == 50341:
-                print(f"{tag_id}: {type(exif_data.get(tag_id))}")
-                continue
-            # tag = Base(tag_id).name
-            data = exif_data.get(tag_id)
-            # decode bytes 
-            if isinstance(data, bytes):
-                # data = data.partition(b" ")[1]
-                # print(data.partition(b" "))
-                data = data.decode("mac-roman")
-                # data = data.decode('latin-1')
-            print(f"{tag_id}: {data}")
+            if tag_id in list(ExifDateTags):         
+                tag_name = Base(tag_id).name
+                data = exif_data.get(tag_id)
+                date_times.append((tag_id, tag_name, data))
+        return date_times
 
-    # FIXME
-    def get_exif_datetime(self, filename):
-        date_time_tag_id = 36867
-        f = os.path.abspath(filename)
-        img = PIL.Image.open(f)
-        exif_data = img.getexif()
-        date_time = exif_data.get(DATE_TIME_TAG_ID)
-        return date_time
 
 # if __name__ == '__main__':
 #     print('Welcome to the Renamer!\n')
@@ -90,5 +75,5 @@ class Renamer:
 
 if __name__ == '__main__':
     ren = Renamer()
-    print(ren._get_exif_data("test_files/_DSC2428.JPG"))
+    print(ren._get_exif_dates("test_files/_DSC2428.JPG"))
 
