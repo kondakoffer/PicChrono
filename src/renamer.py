@@ -9,9 +9,10 @@ ALLOWED_EXTENSIONS = ('.JPG', '.JPEG', '.PNG', '.GIF', '.BMP')
 DEFAULT_SOURCE_DIR = os.curdir
 DEFAULT_DESTINATION_DIR = os.curdir
 
-DATE_TIME_TAG_ID = 306
-DATE_TIME_ORIGIGNAL_TAG_ID = 36867
-PREVIEW_DATE_TIME_TAG_ID = 50971
+
+DATE_TIME_TAG_ID = 0x0132               # Exif tag ID for date and time
+DATE_TIME_ORIGIGNAL_TAG_ID = 0x9003     # Exif tag ID for date and time of original image (time when image was taken)
+DATE_TIME_DIGITIZED_TAG_ID = 0x9004     # Exif tag ID for date and time of digital image (time when image was stored as digital data)
 
 
 class Renamer:
@@ -49,6 +50,8 @@ class Renamer:
                 m_date = os.path.getmtime(os.path.join(self.source_dir, filename))
                 print(f"Modified date: {m_date}")
                 print(datetime.utcfromtimestamp(m_date).strftime('%Y-%m-%d %H:%M:%S'))
+            else:
+                print(f'\nFile {filename} has an unsupported file extension')
 
     # FIXME
     def _get_exif_data(self, filename:str):
