@@ -18,8 +18,8 @@ class ExifDateTags(enum.IntEnum):
 
 class Renamer:
     def __init__(self,source_dir=DEFAULT_SOURCE_DIR, destination_dir=DEFAULT_DESTINATION_DIR) -> None:
-        self.source_dir = source_dir
-        self.destination_dir = destination_dir
+        self.source_dir = os.path.abspath(source_dir)
+        self.destination_dir = os.path.abspath(destination_dir)
 
     @classmethod
     def comandline_setup(cls):
@@ -33,31 +33,47 @@ class Renamer:
 
         return cls(source_dir=source_dir)
 
+    #
     def rename(self):
         """
         Renames all files in the directory.
         """
         print('Renaming files')
         for filename in os.listdir(self.source_dir):
-            if filename.endswith(ALLOWED_EXTENSIONS):
-                print(f'\nRenaming {filename} ...')
+            print(f'\nRenaming {filename} ...')
+            self.rename_image(os.path.join(self.source_dir, filename))
+            # TODO:
+            #   - Error handling
 
-                # # Get the metadata change time
-                # c_date = os.path.getctime(os.path.join(self.source_dir, filename))
-                # print(f"Creation date: {c_date}")
-                # print(datetime.utcfromtimestamp(c_date).strftime('%Y-%m-%d %H:%M:%S'))
-
-                # Get the last modification time
-                m_date = os.path.getmtime(os.path.join(self.source_dir, filename))
-                print(f"Modified date: {m_date}")
-                print(datetime.utcfromtimestamp(m_date).strftime('%Y-%m-%d %H:%M:%S'))
-            else:
-                print(f'\nFile {filename} has an unsupported file extension')
+    # 
+    def rename_image(self, filepath:str):
+        """
+        Renames one specific image based on the EXIF data.
+        """
+        try:
+            abspath = os.path.abspath(filepath)
+        except FileNotFoundError:
+            print(f'File {filepath} not found')
+            return False    # Specify Error code "FIlE_NOT_FOUND"
+        if not os.path.isfile(abspath):
+            print(f'The given filename {filepath} is not a file')
+            return False    # Specify Error code "NOT_A_FILE"
+        if not abspath.endswith(ALLOWED_EXTENSIONS):
+            print(f'The given filename {filepath} has an unsupported file extension ({abspath.split(".")[-1]})')
+            return False
+        with PIL.Image.open(abspath) as img:
+            exif_date_times = self._get_exif_datetimes(img)
+            print(exif_date_times)
+            # TODO:
+            #     - Select minimal date time, handle case for no dates
+            #     - Create new filename, handle case for time stamp already taken
+            #     - Rename file
+            #
+            # Expected handling for no dates:
+            #     - Move file to a folder "_sort_manually"
 
     #
-    def _get_exif_datetimes(self, filename:str) -> list[tuple[int, str, str]]:
-        f = os.path.abspath(filename)
-        img = PIL.Image.open(f)
+    def _get_exif_datetimes(self, img:PIL.Image) -> list[tuple[int, str, str]]:
         exif_data = img.getexif()
         date_times = []
         for tag_id in exif_data:
@@ -74,6 +90,6 @@ class Renamer:
 #     ren.rename()
 
 if __name__ == '__main__':
-    ren = Renamer()
-    print(ren._get_exif_dates("test_files/_DSC2428.JPG"))
+    ren = Renamer(source_dir='test_files')
+    print(ren.rename())
 
