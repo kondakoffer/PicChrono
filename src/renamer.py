@@ -1,10 +1,9 @@
 import os
 from datetime import datetime
-import PIL.Image
+from PIL import Image
 from PIL.ExifTags import Base
 import base64
 import enum
-
 
 ALLOWED_EXTENSIONS = ('.JPG', '.JPEG', '.PNG', '.GIF', '.BMP')
 DEFAULT_SOURCE_DIR = os.curdir
@@ -61,7 +60,7 @@ class Renamer:
         if not abspath.endswith(ALLOWED_EXTENSIONS):
             print(f'The given filename {filepath} has an unsupported file extension ({abspath.split(".")[-1]})')
             return False
-        with PIL.Image.open(abspath) as img:
+        with Image.open(abspath) as img:
             exif_date_times = self._get_exif_datetimes(img)
             print(exif_date_times)
             # TODO:
@@ -73,7 +72,7 @@ class Renamer:
             #     - Move file to a folder "_sort_manually"
 
     #
-    def _get_exif_datetimes(self, img:PIL.Image) -> list[tuple[int, str, str]]:
+    def _get_exif_datetimes(self, img:Image) -> list[tuple[int, str, str]]:
         exif_data = img.getexif()
         date_times = []
         for tag_id in exif_data:
