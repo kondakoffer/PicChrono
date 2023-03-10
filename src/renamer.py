@@ -56,15 +56,20 @@ class Renamer:
             return False    # Specify Error code "FIlE_NOT_FOUND"
         if not os.path.isfile(abspath):
             print(f'The given filename {filepath} is not a file')
-            return False    # Specify Error code "NOT_A_FILE"
+            return False    # TODO: Specify Error code "NOT_A_FILE"
         if not abspath.endswith(ALLOWED_EXTENSIONS):
             print(f'The given filename {filepath} has an unsupported file extension ({abspath.split(".")[-1]})')
-            return False
+            return False # TODO: Specify Error code "UNSUPPORTED_FILE_EXTENSION"
         with Image.open(abspath) as img:
             exif_date_times = self._get_exif_datetimes(img)
             print(exif_date_times)
+            if len(exif_date_times) == 0 or exif_date_times is None:
+                print('No EXIF date and time data found')
+                return False # TODO: Specify Error code "NO_EXIF_DATA_FOUND"
+            minimal_date_time = self._get_minimal_datetime([date_time[2] for date_time in exif_date_times])
+            # date_time[2] is the date time string see return of _get_exif_datetimes
+
             # TODO:
-            #     - Select minimal date time, handle case for no dates
             #     - Create new filename, handle case for time stamp already taken
             #     - Rename file
             #
@@ -82,6 +87,22 @@ class Renamer:
                 date_times.append((tag_id, tag_name, data))
         return date_times
 
+    #
+    def _get_minimal_datetime(self, date_times:list[str]) -> str:
+        """
+        Returns the minimal date time from a list of date times.
+        """
+        minimal_date_time = None
+        for date_time in date_times:
+            # TODO: Check for format?
+            date_time = datetime.strptime(date_time, '%Y:%m:%d %H:%M:%S')
+            if minimal_date_time is None:
+                minimal_date_time = date_time
+            elif minimal_date_time > date_time:
+                minimal_date_time = date_time
+        print(f'Minimal date time: {minimal_date_time}')
+        return minimal_date_time
+    
 
 # if __name__ == '__main__':
 #     print('Welcome to the Renamer!\n')
@@ -90,5 +111,6 @@ class Renamer:
 
 if __name__ == '__main__':
     ren = Renamer(source_dir='test_files')
-    print(ren.rename())
+    ren.rename()
+    ren._get_minimal_datetime(['0021:01:03 12:00:-0', '2021:01:01 12:00:01', '2021:01:01 12:00:02'])
 
