@@ -18,6 +18,8 @@ class ExifDateTags(enum.IntEnum):
 class Renamer:
     def __init__(self,source_dir=DEFAULT_SOURCE_DIR, destination_dir=DEFAULT_DESTINATION_DIR) -> None:
         self.source_dir = os.path.abspath(source_dir)
+        if not os.path.exists(destination_dir):
+            os.makedirs(destination_dir)
         self.destination_dir = os.path.abspath(destination_dir)
 
     @classmethod
@@ -30,6 +32,11 @@ class Renamer:
         if os.path.isdir(source_dir):
             print(f'Dir "{source_dir}" exists')
 
+        destination_dir = input('Input the directory where the file should be stored after they are renamed:\n')
+        if not os.path.exists(destination_dir):
+            os.makedirs(destination_dir)
+            print(f'Dir "{destination_dir}" created')
+        destination_dir = os.path.abspath(destination_dir)
         return cls(source_dir=source_dir)
 
     #
@@ -57,8 +64,10 @@ class Renamer:
         if not os.path.isfile(abspath):
             print(f'The given filename {filepath} is not a file')
             return False    # TODO: Specify Error code "NOT_A_FILE"
-        if not abspath.endswith(ALLOWED_EXTENSIONS):
-            print(f'The given filename {filepath} has an unsupported file extension ({abspath.split(".")[-1]})')
+        f_path, f_ext = os.path.splitext(abspath)
+        f_ext = f_ext.upper()
+        if f_ext not in ALLOWED_EXTENSIONS:
+            print(f'The given filename {filepath} has an unsupported file extension ({f_ext})')
             return False # TODO: Specify Error code "UNSUPPORTED_FILE_EXTENSION"
         with Image.open(abspath) as img:
             exif_date_times = self._get_exif_datetimes(img)
@@ -66,11 +75,16 @@ class Renamer:
             if len(exif_date_times) == 0 or exif_date_times is None:
                 print('No EXIF date and time data found')
                 return False # TODO: Specify Error code "NO_EXIF_DATA_FOUND"
-            minimal_date_time = self._get_minimal_datetime([date_time[2] for date_time in exif_date_times])
+            min_date_time = self._get_minimal_datetime([date_time[2] for date_time in exif_date_times])
+            f_name = min_date_time.strftime("%Y-%m-%d_%H-%M-%S")+f_ext
+            f_path = os.path.join(self.destination_dir, f_name)
+            if os.path.exists(f_path):
+                print('There already exists a file with the name {f_name} in the destination directory {self.destination_dir}')
+                return False # TODO: Specify procedure for handling this case
             # date_time[2] is the date time string see return of _get_exif_datetimes
-
+            img.save(f_path)
             # TODO:
-            #     - Create new filename, handle case for time stamp already taken
+            #     - handle case for time stamp already taken
             #     - Rename file
             #
             # Expected handling for no dates:
@@ -95,7 +109,7 @@ class Renamer:
         minimal_date_time = None
         for date_time in date_times:
             # TODO: Check for format?
-            date_time = datetime.strptime(date_time, '%Y:%m:%d %H:%M:%S')
+            date_time = datetime.strptime(date_time, '%Y:%m:%d %H:%M:%S') # May through value error if format is wrong
             if minimal_date_time is None:
                 minimal_date_time = date_time
             elif minimal_date_time > date_time:
@@ -110,7 +124,7 @@ class Renamer:
 #     ren.rename()
 
 if __name__ == '__main__':
-    ren = Renamer(source_dir='test_files')
+    ren = Renamer(source_dir='test_files', destination_dir='test_files_renamed')
     ren.rename()
-    ren._get_minimal_datetime(['0021:01:03 12:00:-0', '2021:01:01 12:00:01', '2021:01:01 12:00:02'])
+    ren._get_minimal_datetime(['3021:01:03 12:00:10', '2021:01:01 12:30:01', '2021:01:01 12:00:02'])
 
