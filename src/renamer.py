@@ -48,12 +48,19 @@ class Renamer:
         """
         Renames all files in the directory.
         """
-        print('Renaming files')
+        print(f'Source directory: {self.source_dir}')
+        print(f'Destination directory: {self.destination_dir}')
+        print(f'Error directory: {self.error_dir}')
+
+        print('Total number of files: ', len(os.listdir(self.source_dir)))
         for filename in os.listdir(self.source_dir):
             print(f'\nRenaming {filename} ...')
             self.rename_image(os.path.join(self.source_dir, filename))
             # TODO:
             #   - Error handling
+        print('\n--------------------------')
+        print('Number of files in destination directory: ', len(os.listdir(self.destination_dir)))
+        print('Number of files in error directory: ', len(os.listdir(self.error_dir)))
 
     # 
     def rename_image(self, filepath:str):
@@ -72,21 +79,25 @@ class Renamer:
         f_ext = f_ext.upper()
         if f_ext not in ALLOWED_EXTENSIONS:
             print(f'The given filename {filepath} has an unsupported file extension ({f_ext})')
+            os.replace(abspath, os.path.join(self.error_dir, os.path.basename(abspath)))
             return False # TODO: Specify Error code "UNSUPPORTED_FILE_EXTENSION"
         with Image.open(abspath) as img:
             exif_date_times = self._get_exif_datetimes(img)
             print(exif_date_times)
             if len(exif_date_times) == 0 or exif_date_times is None:
                 print('No EXIF date and time data found')
+                os.replace(abspath, os.path.join(self.error_dir, os.path.basename(abspath)))
                 return False # TODO: Specify Error code "NO_EXIF_DATA_FOUND"
             min_date_time = self._get_minimal_datetime([date_time[2] for date_time in exif_date_times])
             f_name = min_date_time.strftime("%Y-%m-%d_%H-%M-%S")+f_ext
             f_path = os.path.join(self.destination_dir, f_name)
             if os.path.exists(f_path):
-                print('There already exists a file with the name {f_name} in the destination directory {self.destination_dir}')
+                print(f'There already exists a file with the name {f_name} in the destination directory {self.destination_dir}')
+                os.replace(abspath, os.path.join(self.error_dir, os.path.basename(abspath)))
                 return False # TODO: Specify procedure for handling this case
             # date_time[2] is the date time string see return of _get_exif_datetimes
-            img.save(f_path)
+            os.replace(abspath, f_path)
+            # img.save(f_path)
             # TODO:
             #     - handle case for time stamp already taken
             #     - Rename file
