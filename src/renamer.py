@@ -8,6 +8,7 @@ import enum
 ALLOWED_EXTENSIONS = ('.JPG', '.JPEG', '.PNG', '.GIF', '.BMP')
 DEFAULT_SOURCE_DIR = os.curdir
 DEFAULT_DESTINATION_DIR = os.curdir
+DEFAULT_ERROR_DIR = os.curdir
 
 class ExifDateTags(enum.IntEnum):
     DATE_TIME_TAG_ID = 0x0132               # 306:      Exif tag ID for date and time
@@ -16,11 +17,14 @@ class ExifDateTags(enum.IntEnum):
 
 
 class Renamer:
-    def __init__(self,source_dir=DEFAULT_SOURCE_DIR, destination_dir=DEFAULT_DESTINATION_DIR) -> None:
+    def __init__(self,source_dir=DEFAULT_SOURCE_DIR, destination_dir=DEFAULT_DESTINATION_DIR, error_dir=DEFAULT_ERROR_DIR) -> None:
         self.source_dir = os.path.abspath(source_dir)
         if not os.path.exists(destination_dir):
             os.makedirs(destination_dir)
         self.destination_dir = os.path.abspath(destination_dir)
+        if not os.path.exists(error_dir):
+            os.makedirs(error_dir)
+        self.error_dir = os.path.abspath(error_dir)
 
     @classmethod
     def comandline_setup(cls):
@@ -124,7 +128,5 @@ class Renamer:
 #     ren.rename()
 
 if __name__ == '__main__':
-    ren = Renamer(source_dir='test_files', destination_dir='test_files_renamed')
+    ren = Renamer(source_dir='test_files', destination_dir='test_files_renamed', error_dir='test_files_error')
     ren.rename()
-    ren._get_minimal_datetime(['3021:01:03 12:00:10', '2021:01:01 12:30:01', '2021:01:01 12:00:02'])
-
