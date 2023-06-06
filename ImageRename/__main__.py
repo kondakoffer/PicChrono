@@ -7,6 +7,8 @@ from random import choice
 import typer
 from rich.console import Console
 
+from ImageRename import version
+
 
 class Color(str, Enum):
     white = "white"
@@ -49,9 +51,8 @@ def main(
         help="Prints the version of the image-rename package.",
     ),
 ) -> None:
-    """Connect to the Databases"""
-
-    connect(options)
+    """Rename images based on their date-time taken EXIF data."""
+    console.print(f"[bold green]Options:[/]\n{options}")
 
 if __name__ == "__main__":
     app()
