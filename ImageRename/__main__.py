@@ -8,7 +8,7 @@ import typer
 from rich.console import Console
 
 from ImageRename import version
-
+from ImageRename.renamer import cnt
 
 class Color(str, Enum):
     white = "white"
@@ -20,7 +20,7 @@ class Color(str, Enum):
 
 
 app = typer.Typer(
-    name="image-rename",
+    name="ImageRename",
     help="Rename images based on their date-time taken EXIF data.",
     add_completion=False,
 )
@@ -30,7 +30,7 @@ console = Console()
 def version_callback(print_version: bool) -> None:
     """Print the version of the package."""
     if print_version:
-        console.print(f"[yellow]image-rename[/] version: [bold blue]{version}[/]")
+        console.print(f"[yellow]ImageRename[/] version: [bold blue]{version}[/]")
         raise typer.Exit()
 
 
@@ -40,7 +40,7 @@ def main(
         None,
         "-o",
         "--options",
-        help="Here should be the options for the image-rename command.",
+        help="Here should be the options for the ImageRename command.",
     ),
     print_version: bool = typer.Option(
         None,
@@ -48,7 +48,7 @@ def main(
         "--version",
         callback=version_callback,
         is_eager=True,
-        help="Prints the version of the image-rename package.",
+        help="Prints the version of the ImageRename package.",
     ),
 ) -> None:
     """Rename images based on their date-time taken EXIF data."""

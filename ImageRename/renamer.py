@@ -138,6 +138,9 @@ class Renamer:
 #     ren = Renamer.comandline_setup()
 #     ren.rename()
 
+def cnt(options):
+    return 0
+
 if __name__ == '__main__':
     ren = Renamer(source_dir='test_files', destination_dir='test_files_renamed', error_dir='test_files_error')
     ren.rename()
