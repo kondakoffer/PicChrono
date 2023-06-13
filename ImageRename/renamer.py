@@ -123,8 +123,7 @@ class Renamer:
         """
         minimal_date_time = None
         for date_time in date_times:
-            # TODO: Check for format?
-            date_time = datetime.strptime(date_time, '%Y:%m:%d %H:%M:%S') # May through value error if format is wrong
+            date_time = datetime.strptime(date_time, '%Y:%m:%d %H:%M:%S')
             if minimal_date_time is None:
                 minimal_date_time = date_time
             elif minimal_date_time > date_time:
