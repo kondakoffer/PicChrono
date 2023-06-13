@@ -55,6 +55,19 @@ class TestGroup_GetExifDateTime:
     # )
 
     def test_get_exif_datetimes(self):
-        img = Image.open('tests/test_files/_DSC2428.JPG')
-        date_times = renamer._get_exif_datetimes(img=img)
-        assert date_times == [(306, 'DateTime', '2023:02:08 12:05:33')]
+        with Image.open('tests/test_files/_DSC2428.JPG') as img:    
+            date_times = renamer._get_exif_datetimes(img)
+            assert date_times == [(306, 'DateTime', '2023:02:08 12:05:33')]
+
+    def test_no_date_time_found(self):
+        pass
+
+    def test_file_format_not_supported(self):
+        pass
+
+    def test_none(self):
+        pass
+
+class TestGroupRenameImage:
+    """Tests for rename_image function"""
+    
