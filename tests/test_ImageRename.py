@@ -1,8 +1,8 @@
 """Tests for the renamer class."""
+import pytest
 
 import os
-
-import pytest
+from PIL import Image
 
 from ImageRename.renamer import *
 
@@ -42,3 +42,19 @@ class TestGroup_MinimalDateTime:
         with pytest.raises(ValueError):
             date_times = ['1900:02:29 00:00:01'] # 1900 is not a leap year
             minimal_date_time = renamer._get_minimal_datetime(date_times)
+
+class TestGroup_GetExifDateTime:
+    """Tests for _get_exif_datetimes function."""
+
+    # @pytest.mark.parametrize(
+            # ("standard_img")
+            # [
+            #     ('test_files/_DSC2428.JPG')
+            #     # Date Time: 8. Feb 2023 at 12:05:33
+            # ]
+    # )
+
+    def test_get_exif_datetimes(self):
+        img = Image.open('tests/test_files/_DSC2428.JPG')
+        date_times = renamer._get_exif_datetimes(img=img)
+        assert date_times == [(306, 'DateTime', '2023:02:08 12:05:33')]
