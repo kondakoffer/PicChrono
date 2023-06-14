@@ -15,7 +15,7 @@ renamer = Renamer(
 
 
 
-class TestGroup_MinimalDateTime:
+class TestGroup_GetMinimalDateTime:
     """Tests for the _get_minimal_datetime function."""
 
     @pytest.mark.parametrize(
