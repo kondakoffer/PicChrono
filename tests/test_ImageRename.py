@@ -18,21 +18,46 @@ renamer = Renamer(
 class TestGroup_MinimalDateTime:
     """Tests for the _get_minimal_datetime function."""
 
-    def test_get_minimal_datetime(self):
-        date_times = ['2019:01:01 00:00:00', '2019:01:01 00:00:01', '2019:01:01 00:00:02']
-        minimal_date_time = renamer._get_minimal_datetime(date_times)
-        assert minimal_date_time == datetime.strptime('2019:01:01 00:00:00', '%Y:%m:%d %H:%M:%S')
+    @pytest.mark.parametrize(
+        'date_times,expected_minimal_date_time',
+        [
+            ( # Test for correct format (ordered)
+                [
+                    '2019:01:01 00:00:00', 
+                    '2019:01:01 00:00:01', 
+                    '2019:01:01 00:00:02'
+                ], 
+                datetime.strptime('2019:01:01 00:00:00', '%Y:%m:%d %H:%M:%S')
+            ),
+            (   # Test for correct format (unordered)
+                [
+                    '2019:01:01 00:00:02',
+                    '2019:01:01 00:00:01', 
+                    '2019:01:01 00:00:00'
+                ],
+                datetime.strptime('2019:01:01 00:00:00', '%Y:%m:%d %H:%M:%S')                             
+            ),
+            ( # Test for wrong format
+                [
+                    '2019:01:01 00:00:0',
+                    '2019:01:01 00:00:1',
+                    '2019:01:01 00:00:2',
+                    '2019:01:01 00:00:0'
+                ],
+                datetime.strptime('2019:01:01 00:00:00', '%Y:%m:%d %H:%M:%S')
+            ),
+            ( # Test for empty list
+                [], None
+            ),
+            # (
+            #     None, pytest.param(TypeError)
+            # ),
+        ]
+    )
 
-    def test_wrong_format(self):
-        date_times = ['2018:01:01 00:00:0', '2019:01:01 00:00:1', '2019:01:01 00:00:2', '2019:01:01 00:00:0']
+    def test_get_minimal_datetime(self, date_times, expected_minimal_date_time):
         minimal_date_time = renamer._get_minimal_datetime(date_times)
-        print(minimal_date_time)
-        assert minimal_date_time == datetime.strptime('2018:01:01 00:00:00', '%Y:%m:%d %H:%M:%S')
-
-    def test_empty_list(self):
-        date_times = []
-        minimal_date_time = renamer._get_minimal_datetime(date_times)
-        assert(minimal_date_time is None)
+        assert minimal_date_time == expected_minimal_date_time
 
     def test_none(self):
         with pytest.raises(TypeError):
