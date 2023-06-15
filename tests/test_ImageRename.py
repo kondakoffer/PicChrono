@@ -3,17 +3,55 @@ import pytest
 import warnings
 
 import os
+import shutil
+
 from PIL import Image, UnidentifiedImageError
 
 from ImageRename.renamer import *
 
-renamer = Renamer(
-    source_dir='test_files', 
-    destination_dir='test_files_renamed', 
-    error_dir='test_files_error'
+TEST_SOURCE_DIR = 'tests/test_files'
+TEST_DESTINATION_DIR = 'tests/test_files_renamed'
+TEST_ERROR_DIR = 'tests/test_files_error'
+
+
+
+def setup_module(module):
+    """Setup for tests."""
+    # Make sure that the test destination and error directories are empty
+    shutil.rmtree(TEST_DESTINATION_DIR)
+    shutil.rmtree(TEST_ERROR_DIR)
+
+def teardown_module(module):
+    """Teardown for tests."""
+    print('\nTeardown')
+
+renamer = Renamer(source_dir=TEST_SOURCE_DIR, destination_dir=TEST_DESTINATION_DIR, error_dir=TEST_ERROR_DIR)
+class TestGroup_RenamerSetup:
+    """Tests for the constructor and classmethods of the Renamer class."""
+
+    @pytest.mark.parametrize(
+        'source_dir,destination_dir,error_dir',
+        [
+            ( # Standard test directories
+                TEST_SOURCE_DIR, TEST_DESTINATION_DIR, TEST_ERROR_DIR
+            ),
+            # TODO: Test for non existing directories
+            # TODO: Test for unreadable directories
+            # TODO: Test for existing parent directoriy
+            # TODO: Test for root directory (no parent directory)
+            # TODO: Test for unpermitted directories (e.g. system directories, unwritable directories, forbidden characters in directory name)) 
+
+        ]
     )
-
-
+    def test_init(self, source_dir, destination_dir, error_dir):
+        """Test for the constructor of the Renamer class."""
+        renamer = Renamer(source_dir, destination_dir, error_dir)
+        assert renamer.source_dir == os.path.abspath(source_dir)
+        assert renamer.destination_dir == os.path.abspath(destination_dir)
+        assert renamer.error_dir == os.path.abspath(error_dir)
+        assert os.path.exists(renamer.source_dir)
+        assert os.path.exists(renamer.destination_dir)
+        assert os.path.exists(renamer.error_dir)
 
 class TestGroup_GetMinimalDateTime:
     """Tests for the _get_minimal_datetime function."""
