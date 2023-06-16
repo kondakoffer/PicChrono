@@ -39,7 +39,8 @@ class TestGroup_RenamerSetup:
             # TODO: Test for unreadable directories
             # TODO: Test for existing parent directoriy
             # TODO: Test for root directory (no parent directory)
-            # TODO: Test for unpermitted directories (e.g. system directories, unwritable directories, forbidden characters in directory name)) 
+            # TODO: Test for unpermitted directories (e.g. system directories, unwritable directories, forbidden characters in directory name)
+            # TODO: Test for alias (~, and other aliases)
 
         ]
     )
@@ -126,22 +127,29 @@ class TestGroup_GetExifDateTime():
             date_times = renamer._get_exif_datetimes(img)
             assert date_times == expected_date_times
 
-    # def test_no_date_time_found(self):
-    #     # There currently is no file without date_times
-    #     warnings.warn(UserWarning("Provide a testfile which has no date-times in any checked EXIF Tag"))
-    #     return
-    #     with Image.open("tests/test_files/no_exif_datetime.JPG") as img:
-    #         date_times = renamer._get_exif_datetimes(img)
-    #         assert date_times == []
-
-    # def test_file_format_not_supported(self):
-    #     warnings.warn(UserWarning("More a test for rename_image function"))
-    #     with pytest.raises(UnidentifiedImageError):
-    #         with Image.open('tests/test_files/wrong_file_format.TXT') as img:
-    #             date_times = renamer._get_exif_datetimes(img)
-
-    # def test_none(self):
-    #     pass
 
 class TestGroup_RenameImage:
     """Tests for rename_image function"""
+
+    @pytest.mark.parametrize(
+        'test_file_path,expected_new_path',
+        [
+            ( # Test standard file
+                'tests/test_files/standard.JPG','2023:02:08 12:05:33'
+            )
+            # TODO: Test for file with no date time
+            # TODO: Test for unsupported file format
+            # TODO: Test for non existing file
+            # TODO: Test for unreadable directories
+            # TODO: Test for file in parent directoriy
+            # TODO: Test for root directory (no parent directory)
+            # TODO: Test for unreachable path (e.g. too long)
+            # TODO: Test for Alias (~, and other aliases)
+            # TODO: Test for unpermitted file (e.g. sys file, no read permisssion, in directory name) (move to error directory, or skip?)
+            # TODO: Test for file with new name already existing (add number to name)
+            # TODO: Test for not an Image (PIL Error)
+        ]
+    )
+
+    def test_rename_image(self, test_file_path, expected_new_path):
+        pass
