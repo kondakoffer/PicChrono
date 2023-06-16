@@ -67,6 +67,9 @@ class Renamer:
         """
         Renames one specific image based on the EXIF data.
         """
+        # TODO: Copy not replace a file
+        # TODO: Handle new name already exists
+        # TODO: If possible rely on errors built in used packages
         try:
             abspath = os.path.abspath(filepath)
         except FileNotFoundError:
