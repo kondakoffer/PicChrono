@@ -73,9 +73,6 @@ class Renamer:
         # TODO: If possible rely on errors built in used packages 
         # 
         # Maybe we can neglect this check
-        # if not os.path.isfile(filepath):
-        #     print(f'The given filename {filepath} is not a file')
-        #     return False    # TODO: Specify Error code "NOT_A_FILE"
         f_path, f_ext = os.path.splitext(filepath)
         f_ext = f_ext.upper()
         # Maybe we can neglect this check since we use PIL
@@ -86,8 +83,8 @@ class Renamer:
         with Image.open(filepath) as img:
             exif_date_times = self._get_exif_datetimes(img)
             if len(exif_date_times) == 0:
-                shutil.copy2(filepath, os.path.join(self.error_dir, os.path.basename(filepath)))
-                # os.replace(filepath, os.path.join(self.error_dir, os.path.basename(filepath)))
+                f_path = os.path.join(self.error_dir, os.path.basename(filepath))
+                shutil.copy2(filepath, f_path)
                 return False # TODO: Specify Error code "NO_EXIF_DATA_FOUND"
             # date_time[2] is the date time string see return of _get_exif_datetimes
             min_date_time = self._get_minimal_datetime([date_time[2] for date_time in exif_date_times])
@@ -104,12 +101,14 @@ class Renamer:
                 elif i < 1000:
                     f_appendix = f'_{i}'
                 else:
-                    shutil.copy2(filepath, os.path.join(self.error_dir, os.path.basename(filepath)))
-                    raise Exception('Too many files with the same name')
+                    f_path = os.path.join(self.error_dir, os.path.basename(filepath))
+                    shutil.copy2(filepath, f_path)
+                    return f_path
                     # TODO: Specify Error code "TOO_MANY_FILES_WITH_SAME_NAME/TIMESTAMP"
                 f_name = f_timestamp+f_appendix+f_ext
                 f_path = os.path.join(self.destination_dir, f_name)
             shutil.copy2(filepath, f_path)
+            return f_path
 
 
     #

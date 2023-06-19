@@ -23,7 +23,9 @@ def setup_module(module):
 
 def teardown_module(module):
     """Teardown for tests."""
-    print('\nTeardown')
+    # Make sure that the test destination and error directories are empty
+    shutil.rmtree(TEST_DESTINATION_DIR)
+    shutil.rmtree(TEST_ERROR_DIR)
 
 renamer = Renamer(source_dir=TEST_SOURCE_DIR, destination_dir=TEST_DESTINATION_DIR, error_dir=TEST_ERROR_DIR)
 class TestGroup_RenamerSetup:
@@ -135,7 +137,8 @@ class TestGroup_RenameImage:
         'test_file_path,expected_new_path',
         [
             ( # Test standard file
-                'tests/test_files/standard.JPG','2023-02-08_12-05-33'
+                'tests/test_files/standard.JPG',
+                os.path.join(TEST_DESTINATION_DIR, '2023-02-08_12-05-33.JPG')
             )
             # TODO: Test for file with no date time
             # TODO: Test for unsupported file format
@@ -152,4 +155,7 @@ class TestGroup_RenameImage:
     )
 
     def test_rename_image(self, test_file_path, expected_new_path):
-        pass
+        f_path = renamer.rename_image(test_file_path)
+        assert os.path.abspath(f_path) == os.path.abspath(expected_new_path)
+        assert os.path.exists(f_path)
+        assert os.path.exists(test_file_path)
