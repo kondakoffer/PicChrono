@@ -135,7 +135,7 @@ class TestGroup_RenameImage:
         'test_file_path,expected_new_path',
         [
             ( # Test standard file
-                'tests/test_files/standard.JPG','2023:02:08 12:05:33'
+                'tests/test_files/standard.JPG','2023-02-08_12-05-33'
             )
             # TODO: Test for file with no date time
             # TODO: Test for unsupported file format

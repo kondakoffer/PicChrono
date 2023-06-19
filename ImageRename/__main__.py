@@ -8,7 +8,6 @@ import typer
 from rich.console import Console
 
 from ImageRename import version
-from ImageRename.renamer import cnt
 
 class Color(str, Enum):
     white = "white"
