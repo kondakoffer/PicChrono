@@ -1,9 +1,8 @@
 import os
 import shutil
 from datetime import datetime
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from PIL.ExifTags import Base
-import base64
 import enum
 
 ALLOWED_EXTENSIONS = ('.JPG', '.JPEG', '.PNG', '.GIF', '.BMP')
@@ -57,8 +56,6 @@ class Renamer:
         for filename in os.listdir(self.source_dir):
             print(f'\nRenaming {filename} ...')
             self.rename_image(os.path.join(self.source_dir, filename))
-            # TODO:
-            #   - Error handling
         print('\n--------------------------')
         print('Number of files in destination directory: ', len(os.listdir(self.destination_dir)))
         print('Number of files in error directory: ', len(os.listdir(self.error_dir)))
@@ -68,45 +65,30 @@ class Renamer:
         """
         Renames one specific image based on the EXIF data.
         """
-        # TODO: Copy not replace a file
-        # TODO: Handle new name already exists
-        # TODO: If possible rely on errors built in used packages 
-        # 
-        # Maybe we can neglect this check
         f_path, f_ext = os.path.splitext(filepath)
         f_ext = f_ext.upper()
-        # Maybe we can neglect this check since we use PIL
-        # if f_ext not in ALLOWED_EXTENSIONS:
-        #     print(f'The given filename {filepath} has an unsupported file extension ({f_ext})')
-        #     os.replace(abspath, os.path.join(self.error_dir, os.path.basename(abspath)))
-        #     return False # TODO: Specify Error code "UNSUPPORTED_FILE_EXTENSION"
-        with Image.open(filepath) as img:
-            exif_date_times = self._get_exif_datetimes(img)
-            if len(exif_date_times) == 0:
-                f_path = os.path.join(self.error_dir, os.path.basename(filepath))
-                shutil.copy2(filepath, f_path)
-                return False # TODO: Specify Error code "NO_EXIF_DATA_FOUND"
-            # date_time[2] is the date time string see return of _get_exif_datetimes
-            min_date_time = self._get_minimal_datetime([date_time[2] for date_time in exif_date_times])
-            f_timestamp = min_date_time.strftime("%Y-%m-%d_%H-%M-%S")
-            f_name = f_timestamp+f_ext
-            f_path = os.path.join(self.destination_dir, f_name)
-            i = 1
-            f_appendix = ''
-            while os.path.exists(f_path):
-                if i < 10:
-                    f_appendix = f'_00{i}'
-                elif i < 100:
-                    f_appendix = f'_0{i}'
-                elif i < 1000:
-                    f_appendix = f'_{i}'
-                else:
+        try:
+            with Image.open(filepath) as img:
+                exif_date_times = self._get_exif_datetimes(img)
+                if len(exif_date_times) == 0:
                     f_path = os.path.join(self.error_dir, os.path.basename(filepath))
                     shutil.copy2(filepath, f_path)
                     return f_path
-                    # TODO: Specify Error code "TOO_MANY_FILES_WITH_SAME_NAME/TIMESTAMP"
-                f_name = f_timestamp+f_appendix+f_ext
+                # date_time[2] is the date time string see return of _get_exif_datetimes
+                min_date_time = self._get_minimal_datetime([date_time[2] for date_time in exif_date_times])
+                f_timestamp = min_date_time.strftime("%Y-%m-%d_%H-%M-%S")
+                f_name = f_timestamp+f_ext
                 f_path = os.path.join(self.destination_dir, f_name)
+                i = 1
+                f_appendix = ''
+                while os.path.exists(f_path):
+                    f_appendix = f'_{i:03d}'
+                    f_name = f_timestamp+f_appendix+f_ext
+                    f_path = os.path.join(self.destination_dir, f_name)
+                shutil.copy2(filepath, f_path)
+                return f_path
+        except UnidentifiedImageError:
+            f_path = os.path.join(self.error_dir, os.path.basename(filepath))
             shutil.copy2(filepath, f_path)
             return f_path
 
