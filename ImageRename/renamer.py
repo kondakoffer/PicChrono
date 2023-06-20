@@ -17,51 +17,34 @@ class ExifDateTags(enum.IntEnum):
 
 
 class Renamer:
-    def __init__(self,source_dir=DEFAULT_SOURCE_DIR, destination_dir=DEFAULT_DESTINATION_DIR, error_dir=DEFAULT_ERROR_DIR) -> None:
-        self.source_dir = os.path.abspath(source_dir)
-        if not os.path.exists(destination_dir):
-            os.makedirs(destination_dir)
-        self.destination_dir = os.path.abspath(destination_dir)
-        if not os.path.exists(error_dir):
-            os.makedirs(error_dir)
-        self.error_dir = os.path.abspath(error_dir)
-
-    @classmethod
-    def comandline_setup(cls):
-        """
-        Providing a base setup to use the Renamer via the comandline.
-        """
-        source_dir = input('Input the directory where files have to be renamed:\n')
-        source_dir = os.path.abspath(source_dir)
-        if os.path.isdir(source_dir):
-            print(f'Dir "{source_dir}" exists')
-
-        destination_dir = input('Input the directory where the file should be stored after they are renamed:\n')
-        if not os.path.exists(destination_dir):
-            os.makedirs(destination_dir)
-            print(f'Dir "{destination_dir}" created')
-        destination_dir = os.path.abspath(destination_dir)
-        return cls(source_dir=source_dir)
+    def __init__(self):
+        pass
 
     #
-    def rename(self):
+    def rename(
+            self,
+            source_dir:str|os.PathLike=DEFAULT_SOURCE_DIR,
+            destination_dir:str|os.PathLike=DEFAULT_DESTINATION_DIR,
+            error_dir:str|os.PathLike=DEFAULT_ERROR_DIR
+        ):
         """
         Renames all files in the directory.
         """
-        print(f'Source directory: {self.source_dir}')
-        print(f'Destination directory: {self.destination_dir}')
-        print(f'Error directory: {self.error_dir}')
-
-        print('Total number of files: ', len(os.listdir(self.source_dir)))
-        for filename in os.listdir(self.source_dir):
-            print(f'\nRenaming {filename} ...')
-            self.rename_image(os.path.join(self.source_dir, filename))
-        print('\n--------------------------')
-        print('Number of files in destination directory: ', len(os.listdir(self.destination_dir)))
-        print('Number of files in error directory: ', len(os.listdir(self.error_dir)))
+        if not os.path.exists(destination_dir):
+            os.makedirs(destination_dir)
+        if not os.path.exists(error_dir):
+            os.makedirs(error_dir)
+        for filename in os.listdir(source_dir):
+            self.rename_image(filepath=os.path.join(source_dir, filename),destination_dir=destination_dir, error_dir=error_dir)
+        return True
 
     # 
-    def rename_image(self, filepath:str):
+    def rename_image(
+            self,
+            filepath:str|os.PathLike,
+            destination_dir:str|os.PathLike=DEFAULT_DESTINATION_DIR,
+            error_dir:str|os.PathLike=DEFAULT_ERROR_DIR
+        )-> os.PathLike:
         """
         Renames one specific image based on the EXIF data.
         """
@@ -71,24 +54,24 @@ class Renamer:
             with Image.open(filepath) as img:
                 exif_date_times = self._get_exif_datetimes(img)
                 if len(exif_date_times) == 0:
-                    f_path = os.path.join(self.error_dir, os.path.basename(filepath))
+                    f_path = os.path.join(error_dir, os.path.basename(filepath))
                     shutil.copy2(filepath, f_path)
                     return f_path
                 # date_time[2] is the date time string see return of _get_exif_datetimes
                 min_date_time = self._get_minimal_datetime([date_time[2] for date_time in exif_date_times])
                 f_timestamp = min_date_time.strftime("%Y-%m-%d_%H-%M-%S")
                 f_name = f_timestamp+f_ext
-                f_path = os.path.join(self.destination_dir, f_name)
+                f_path = os.path.join(destination_dir, f_name)
                 i = 1
                 f_appendix = ''
                 while os.path.exists(f_path):
                     f_appendix = f'_{i:03d}'
                     f_name = f_timestamp+f_appendix+f_ext
-                    f_path = os.path.join(self.destination_dir, f_name)
+                    f_path = os.path.join(destination_dir, f_name)
                 shutil.copy2(filepath, f_path)
                 return f_path
         except UnidentifiedImageError:
-            f_path = os.path.join(self.error_dir, os.path.basename(filepath))
+            f_path = os.path.join(error_dir, os.path.basename(filepath))
             shutil.copy2(filepath, f_path)
             return f_path
 
@@ -118,8 +101,3 @@ class Renamer:
                 minimal_date_time = date_time
         print(f'Minimal date time: {minimal_date_time}')
         return minimal_date_time
-    
-
-if __name__ == '__main__':
-    ren = Renamer(source_dir='tests/test_files', destination_dir='tests/test_files_renamed', error_dir='tests/test_files_error')
-    ren.rename()

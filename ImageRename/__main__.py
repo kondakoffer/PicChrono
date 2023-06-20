@@ -34,6 +34,11 @@ def version_callback(print_version: bool) -> None:
 
 
 @app.command()
+def rename(source_dir, destination_dir, error_dir):
+    """Rename images in source_dir based on their date-time taken EXIF data."""
+
+    
+@app.command()
 def main(
     options: Optional[str] = typer.Option(
         None,
@@ -51,7 +56,7 @@ def main(
     ),
 ) -> None:
     """Rename images based on their date-time taken EXIF data."""
-    console.print(f"[bold green]Options:[/]\n{options}")
+    # console.print(f"[bold green]Options:[/]\n{options}")
 
 if __name__ == "__main__":
     app()

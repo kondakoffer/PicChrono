@@ -13,6 +13,8 @@ TEST_SOURCE_DIR = 'tests/test_files'
 TEST_DESTINATION_DIR = 'tests/test_files_renamed'
 TEST_ERROR_DIR = 'tests/test_files_error'
 
+renamer = Renamer()
+
 def delete_content(folder):
     """Deletes all files in a folder."""
     for filename in os.listdir(folder):
@@ -27,17 +29,23 @@ def delete_content(folder):
 
 def setup_module(module):
     """Setup for tests."""
-    # Make sure that the test destination and error directories are empty
-    shutil.rmtree(TEST_DESTINATION_DIR)
-    shutil.rmtree(TEST_ERROR_DIR)
+    # Make sure that the test destination and error directories are exist and are empty
+    if os.path.exists(TEST_DESTINATION_DIR):
+        delete_content(TEST_DESTINATION_DIR)
+    else:
+        os.mkdir(TEST_DESTINATION_DIR)
+    if os.path.exists(TEST_ERROR_DIR):
+        delete_content(TEST_ERROR_DIR)
+    else:
+        os.mkdir(TEST_ERROR_DIR)
 
-def teardown_class(module):
+def teardown_module(module):
     """Teardown for tests."""
-    # Make sure that the test destination and error directories are empty
+    # Make sure that the test destination and error directories are deleted
     shutil.rmtree(TEST_DESTINATION_DIR)
     shutil.rmtree(TEST_ERROR_DIR)
 
-renamer = Renamer(source_dir=TEST_SOURCE_DIR, destination_dir=TEST_DESTINATION_DIR, error_dir=TEST_ERROR_DIR)
+@pytest.mark.skip("Deprecated")
 class TestGroup_RenamerSetup:
     """Tests for the constructor and classmethods of the Renamer class."""
 
@@ -121,7 +129,7 @@ class TestGroup_GetMinimalDateTime:
             minimal_date_time = renamer._get_minimal_datetime(date_times)
 
 
-class TestGroup_GetExifDateTime():
+class TestGroup_GetExifDateTime:
     """Tests for _get_exif_datetimes function."""
     
     @pytest.mark.parametrize(
@@ -147,36 +155,51 @@ class TestGroup_RenameImage:
     def setup_class(cls):
         """Setup for test class"""
         # Make sure that the test destination and error directories are empty
-        delete_content(TEST_DESTINATION_DIR)
-        delete_content(TEST_ERROR_DIR)
+        if os.path.exists(TEST_DESTINATION_DIR):
+            delete_content(TEST_DESTINATION_DIR)
+        else:
+            os.mkdir(TEST_DESTINATION_DIR)
+        if os.path.exists(TEST_ERROR_DIR):
+            delete_content(TEST_ERROR_DIR)
+        else:
+            os.mkdir(TEST_ERROR_DIR)
 
     @classmethod
     def teardown_class(cls):
         """Teardown for test class"""
         # Make sure that the test destination and error directories are empty
-        delete_content(TEST_DESTINATION_DIR)
-        delete_content(TEST_ERROR_DIR)
+        if os.path.exists(TEST_DESTINATION_DIR):
+            delete_content(TEST_DESTINATION_DIR)
+        if os.path.exists(TEST_ERROR_DIR):
+            delete_content(TEST_ERROR_DIR)
 
     @pytest.mark.parametrize(
-        'test_file_path,expected_new_path',
+        'test_file_path,destination_dir,error_dir,expected_new_path',
         [
             ( # Test standard file
-                'tests/test_files/standard.JPG',
+                os.path.join('tests','test_files','standard.JPG'),
+                TEST_DESTINATION_DIR,
+                TEST_ERROR_DIR,
                 os.path.join(TEST_DESTINATION_DIR, '2023-02-08_12-05-33.JPG')
             ),
             ( # Test file with new name already existing
                 'tests/test_files/standard_copy.JPG',
+                TEST_DESTINATION_DIR,
+                TEST_ERROR_DIR,
                 os.path.join(TEST_DESTINATION_DIR, '2023-02-08_12-05-33_001.JPG')        
             ),
             ( # Test file not an image
                 'tests/test_files/not_an_image.TXT',
+                TEST_DESTINATION_DIR,
+                TEST_ERROR_DIR,
                 os.path.join(TEST_ERROR_DIR, 'not_an_image.TXT')
             ),
             ( # Test file with no date time
                 'tests/test_files/no_date_time.JPG',
+                TEST_DESTINATION_DIR,
+                TEST_ERROR_DIR,
                 os.path.join(TEST_ERROR_DIR, 'no_date_time.JPG')
             )
-            # TODO: Test for file with no date time
             # TODO: Test for unsupported file format
             # TODO: Test for non existing file
             # TODO: Test for unreadable directories
@@ -188,8 +211,10 @@ class TestGroup_RenameImage:
         ]
     )
 
-    def test_rename_image(self, test_file_path, expected_new_path):
-        f_path = renamer.rename_image(test_file_path)
+    def test_rename_image(self, test_file_path, destination_dir, error_dir, expected_new_path):
+        f_path = renamer.rename_image(filepath=test_file_path,
+                                      destination_dir=destination_dir,
+                                      error_dir=error_dir)
         with open(f_path, 'rb') as img1:
             with open(test_file_path, 'rb') as img2:
                 # Check if the images are identical
@@ -198,25 +223,35 @@ class TestGroup_RenameImage:
         assert os.path.exists(f_path)
         assert os.path.exists(test_file_path)
 
-class TetsGroup_Rename():
+class TestGroup_Rename:
     """Tests for rename function."""
 
     @classmethod
     def setup_class(cls):
         """Setup for test class"""
         # Make sure that the test destination and error directories are empty
-        delete_content(TEST_DESTINATION_DIR)
-        delete_content(TEST_ERROR_DIR)
+        shutil.rmtree(TEST_DESTINATION_DIR)
+        shutil.rmtree(TEST_ERROR_DIR)
 
     @classmethod
     def teardown_class(cls):
         """Teardown for test class"""
         # Make sure that the test destination and error directories are empty
-        delete_content(TEST_DESTINATION_DIR)
-        delete_content(TEST_ERROR_DIR)
-
-    def test_rename(self):
-        renamer.rename()
+        if os.path.exists(TEST_DESTINATION_DIR):
+            delete_content(TEST_DESTINATION_DIR)
+        if os.path.exists(TEST_ERROR_DIR):
+            delete_content(TEST_ERROR_DIR)
+    
+    @pytest.mark.parametrize(
+        'source_dir,destination_dir,error_dir',
+        [
+            ( # Standard test directories
+                TEST_SOURCE_DIR, TEST_DESTINATION_DIR, TEST_ERROR_DIR
+            ),
+        ]
+    )
+    def test_rename(self, source_dir, destination_dir, error_dir):
+        assert renamer.rename(source_dir=source_dir, destination_dir=destination_dir, error_dir=error_dir)
         assert os.path.exists(TEST_DESTINATION_DIR)
         assert os.path.exists(TEST_ERROR_DIR)
         assert len(os.listdir(TEST_SOURCE_DIR)) == len(os.listdir(TEST_DESTINATION_DIR))+len(os.listdir(TEST_ERROR_DIR))
