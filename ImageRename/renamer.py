@@ -48,6 +48,10 @@ class Renamer:
         """
         Renames one specific image based on the EXIF data.
         """
+        if not os.path.exists(destination_dir):
+            os.makedirs(destination_dir)
+        if not os.path.exists(error_dir):
+            os.makedirs(error_dir)
         f_path, f_ext = os.path.splitext(filepath)
         f_ext = f_ext.upper()
         try:
@@ -62,9 +66,10 @@ class Renamer:
                 f_timestamp = min_date_time.strftime("%Y-%m-%d_%H-%M-%S")
                 f_name = f_timestamp+f_ext
                 f_path = os.path.join(destination_dir, f_name)
-                i = 1
+                i = 0
                 f_appendix = ''
                 while os.path.exists(f_path):
+                    i += 1
                     f_appendix = f'_{i:03d}'
                     f_name = f_timestamp+f_appendix+f_ext
                     f_path = os.path.join(destination_dir, f_name)
