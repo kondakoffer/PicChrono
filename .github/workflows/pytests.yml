@@ -25,7 +25,7 @@ jobs:
       run: poetry install --no-root
 
     - name: Activate virtual environment
-      run: poetry shell
+      run: poetry shell --no-interaction
 
     - name: Run PyTest
       run: poetry run pytest
