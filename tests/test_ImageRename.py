@@ -194,14 +194,6 @@ class TestGroup_RenameImage:
                 TEST_ERROR_DIR,
                 os.path.join(TEST_ERROR_DIR, 'no_date_time.JPG')
             )
-            # TODO: Test for unsupported file format
-            # TODO: Test for non existing file
-            # TODO: Test for unreadable directories
-            # TODO: Test for file in parent directoriy
-            # TODO: Test for root directory (no parent directory)
-            # TODO: Test for unreachable path (e.g. too long)
-            # TODO: Test for Alias (~, and other aliases)
-            # TODO: Test for unpermitted file (e.g. sys file, no read permisssion, in directory name) (move to error directory, or skip?)
         ]
     )
 
