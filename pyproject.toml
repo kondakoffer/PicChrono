@@ -9,10 +9,8 @@ homepage = "https://github.com/kondakoffer/Rename_files" # Update me!
 repository = "https://github.com/kondakoffer/Rename_files"
 documentation = "https://github.com/kondakoffer/Rename_files" # Update me!
 keywords = ["Metadata extraction", "Date-time extraction", "File renaming", "Pillow library", "Media organization"]
-# packages = [{include = "image-rename"}]
 
 [tool.poetry.scripts]
-# image-rename = "ImageRename.__main__:app"
 test = "pytest"
 
 [tool.poetry.dependencies]
