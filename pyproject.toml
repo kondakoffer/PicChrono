@@ -12,7 +12,7 @@ keywords = ["Metadata extraction", "Date-time extraction", "File renaming", "Pil
 # packages = [{include = "image-rename"}]
 
 [tool.poetry.scripts]
-ImageRename = "ImageRename.__main__:app"
+# image-rename = "ImageRename.__main__:app"
 test = "pytest"
 
 [tool.poetry.dependencies]
