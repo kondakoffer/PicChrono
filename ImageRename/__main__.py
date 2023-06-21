@@ -6,6 +6,7 @@ from enum import Enum
 from random import choice
 
 import typer
+from typing_extensions import Annotated
 from rich.console import Console
 
 from ImageRename import version
@@ -47,6 +48,18 @@ def rename_image_callback(
     )
     console.print(f"[bold green]Renamed image:[/]\n{f_path}")
 
+def rename_dir_callback(
+        source_dir: str,
+        destination_dir: str = os.curdir,
+        error_dir: str = os.curdir,
+    ) -> None:
+    """Rename all images in a directory."""
+    Renamer().rename(
+        source_dir=source_dir,
+        destination_dir=destination_dir,
+        error_dir=error_dir,
+    )
+
 @app.command()
 def main(
     options: Optional[str] = typer.Option(
@@ -63,36 +76,38 @@ def main(
         is_eager=True,
         help="Prints the version of the ImageRename package.",
     ),
-    filepath: str = typer.Option(
-        None,
-        "-f",
-        "--filepath",
-        help="Path to the image file.",
+    source_path: str = typer.Argument(
+        ...,
+        help="Path to the file or directory which (contents) should be renamed.",
     ),
-    destination_dir: str = typer.Option(
+    destination_dir: str = typer.Argument(
         os.curdir,
-        "-d",
-        "--destination-dir",
-        help="Path to the destination directory.",
+        help="Path to the directory where the renamed files should be stored.",
     ),
-    error_dir: str = typer.Option(
+    error_dir: str = typer.Argument(
         os.curdir,
-        "-e",
-        "--error-dir",
-        help="Path to the error directory.",
+        help="Path to the directory where the files which could not be renamed should be stored.",
     ),
 ) -> None:
     """Rename images based on their date-time taken EXIF data."""
     if options:
         console.print(f"You passed an option: {options}")
-    if filepath:
-        rename_image_callback(
-            filepath=filepath,
-            destination_dir=destination_dir,
-            error_dir=error_dir,
-        )
     else:
-        console.print(f"[bold red]No filepath given.[/]")
+        if not os.path.exists(source_path):
+            console.print(f"[bold red]Source path does not exist:[/]\n{source_path}")
+            raise typer.Exit(code=1)
+        if os.path.isfile(source_path):
+            rename_image_callback(
+                filepath=source_path,
+                destination_dir=destination_dir,
+                error_dir=error_dir,
+            )
+        elif os.path.isdir(source_path):
+            rename_dir_callback(
+                source_dir=source_path,
+                destination_dir=destination_dir,
+                error_dir=error_dir,
+            )
 
 if __name__ == "__main__":
     app()

@@ -104,5 +104,4 @@ class Renamer:
                 minimal_date_time = date_time
             elif minimal_date_time > date_time:
                 minimal_date_time = date_time
-        print(f'Minimal date time: {minimal_date_time}')
         return minimal_date_time
