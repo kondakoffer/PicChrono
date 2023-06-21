@@ -1,6 +1,7 @@
 # :snake: Python Project
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Code Style](https://img.shields.io/badge/Code%20Style-black-black.svg)](https://github.com/psf/black)
 
 -----------------
 ## :bulb: Table of Contents

@@ -12,6 +12,7 @@ from rich.console import Console
 from ImageRename import version
 from ImageRename.renamer import Renamer
 
+
 class Color(str, Enum):
     white = "white"
     red = "red"
@@ -35,6 +36,7 @@ def version_callback(print_version: bool) -> None:
         console.print(f"[yellow]ImageRename[/] version: [bold blue]{version}[/]")
         raise typer.Exit()
 
+
 def rename_image_callback(
     filepath: str,
     destination_dir: str = os.curdir,
@@ -48,17 +50,19 @@ def rename_image_callback(
     )
     console.print(f"[bold green]Renamed image:[/]\n{f_path}")
 
+
 def rename_dir_callback(
-        source_dir: str,
-        destination_dir: str = os.curdir,
-        error_dir: str = os.curdir,
-    ) -> None:
+    source_dir: str,
+    destination_dir: str = os.curdir,
+    error_dir: str = os.curdir,
+) -> None:
     """Rename all images in a directory."""
     Renamer().rename(
         source_dir=source_dir,
         destination_dir=destination_dir,
         error_dir=error_dir,
     )
+
 
 @app.command()
 def main(
@@ -108,6 +112,7 @@ def main(
                 destination_dir=destination_dir,
                 error_dir=error_dir,
             )
+
 
 if __name__ == "__main__":
     app()
