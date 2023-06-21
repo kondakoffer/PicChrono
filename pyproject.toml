@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ImageRename"
+name = "image-rename"
 version = "0.1.0"
 description = "A tool to automaticallly rename images to their respective date-time taken"
 authors = ["kondakoffer <kondakov.valentin@icloud.com>"]
@@ -9,7 +9,7 @@ homepage = "https://github.com/kondakoffer/Rename_files" # Update me!
 repository = "https://github.com/kondakoffer/Rename_files"
 documentation = "https://github.com/kondakoffer/Rename_files" # Update me!
 keywords = ["Metadata extraction", "Date-time extraction", "File renaming", "Pillow library", "Media organization"]
-packages = [{include = "ImageRename"}]
+# packages = [{include = "image-rename"}]
 
 [tool.poetry.scripts]
 ImageRename = "ImageRename.__main__:app"
