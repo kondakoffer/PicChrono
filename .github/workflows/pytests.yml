@@ -22,7 +22,9 @@ jobs:
         poetry config virtualenvs.create true
 
     - name: Install dependencies
-      run: poetry install
+      run: poetry install --no-root
 
     - name: Run PyTest
+      env:
+        PYTHONPATH: ${{ github.workspace }}
       run: poetry run pytest
