@@ -13,6 +13,7 @@ keywords = ["Metadata extraction", "Date-time extraction", "File renaming", "Pil
 
 [tool.poetry.scripts]
 ImageRename = "ImageRename.__main__:app"
+test = "pytest"
 
 [tool.poetry.dependencies]
 python = "^3.10"
