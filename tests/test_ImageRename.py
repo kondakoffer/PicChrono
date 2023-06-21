@@ -155,14 +155,8 @@ class TestGroup_RenameImage:
     def setup_class(cls):
         """Setup for test class"""
         # Make sure that the test destination and error directories are empty
-        if os.path.exists(TEST_DESTINATION_DIR):
-            delete_content(TEST_DESTINATION_DIR)
-        else:
-            os.mkdir(TEST_DESTINATION_DIR)
-        if os.path.exists(TEST_ERROR_DIR):
-            delete_content(TEST_ERROR_DIR)
-        else:
-            os.mkdir(TEST_ERROR_DIR)
+        shutil.rmtree(TEST_DESTINATION_DIR)
+        shutil.rmtree(TEST_ERROR_DIR)
 
     @classmethod
     def teardown_class(cls):
