@@ -7,7 +7,7 @@ import shutil
 
 from PIL import Image, UnidentifiedImageError
 
-from ImageRename.renamer import *
+from pic_chrono.renamer import *
 
 TEST_SOURCE_DIR = 'tests/test_files'
 TEST_DESTINATION_DIR = 'tests/test_files_renamed'
