@@ -1,7 +1,7 @@
 # :snake: Python Project
 <center>
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
 [![Code Style](https://img.shields.io/badge/Code%20Style-black-black.svg)](https://github.com/psf/black)
 [![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
 
