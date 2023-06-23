@@ -6,8 +6,8 @@
 
 Before you begin, ensure that you have the following prerequisites installed:
 
-- :snake: Python (version X.X or higher)
-- Any other specific dependencies or tools required by the project
+- Python (version 3.10 or higher), refer to [python's website](https://www.python.org) to install it.
+- pip, refer to [pip's official documentation](https://pip.pypa.io/en/stable/installing/) to install it.
 
 ## Installation
 
@@ -40,6 +40,6 @@ If you encounter any issues or errors, here are a few troubleshooting tips:
 
 ## License
 
-This project is licensed under the [LICENSE](LICENSE). Please review the license terms before using the project.
+This project is licensed under the [MIT-LICENSE](LICENSE). Please review the license terms before using the project.
 
 We hope this Quick Start Guide helps you get up and running quickly with our project! If you have any questions or need further assistance, don't hesitate to reach out. :smiley:

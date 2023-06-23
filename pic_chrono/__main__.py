@@ -9,8 +9,8 @@ import typer
 from typing_extensions import Annotated
 from rich.console import Console
 
-from ImageRename import version
-from ImageRename.renamer import Renamer
+from pic_chrono import version
+from pic_chrono.renamer import Renamer
 
 
 class Color(str, Enum):
@@ -95,7 +95,8 @@ def main(
 ) -> None:
     """Rename images based on their date-time taken EXIF data."""
     if options:
-        console.print(f"You passed an option: {options}")
+        # console.print(f"You passed an option: {options}")
+        pass
     else:
         if not os.path.exists(source_path):
             console.print(f"[bold red]Source path does not exist:[/]\n{source_path}")

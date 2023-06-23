@@ -1,29 +1,42 @@
-# :snake: Python Project
+# PicChrono
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+<center>
+
+[![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
 [![Code Style](https://img.shields.io/badge/Code%20Style-black-black.svg)](https://github.com/psf/black)
+[![Coverage](./assets/badges/coverage.svg)](./assets/badges/coverage.svg)
+[![Testing](https://img.shields.io/badge/Testing-PyTest-olive.svg)](https://docs.pytest.org/)
+
+</center>
 
 -----------------
-## :bulb: Table of Contents
-- [Description](#books-description)
-- [Installation](#wrench-installation)
-- [Usage](#rocket-usage)
-- [Testing](#test_tube-testing)
-- [Contributing](#pencil-contributing)
-- [Code of Conduct](#sparkles-code-of-conduct)
-- [License](#scroll-license)
-- [Contact](#email-contact)
-- [Acknowledgements](#star-acknowledgements)
-- [Useful Links](#link-useful-links)
 
 ## :books: Description
-A brief description of your Python project goes here.
+A python package helping you to archive your photos. It renames the photos based on the date and time they were taken.
+
+## :rocket: Quickstart
+Please follow the [quickstart guide](QUICK_START.md).
 
 ## :wrench: Installation
-Provide instructions on how to install your project.
+```bash
+pip install picchrono
+pip install git+https://github.com/kondakoffer/PicChrono
+```
 
-## :rocket: Usage
-Provide instructions on how to use your project or any relevant code snippets.
+## :gear: Usage
+Install the package as explained above. Then, you can use the package as follows:
+```bash
+PicChrono [OPTIONS] SOURCE_PATH [DESTINATION_DIR] [ERROR_DIR]  
+```
+- `SOURCE_PATH`: The path to the directory/file (containing) the photos you want to rename.
+- `DESTINATION_DIR`: The path to the directory where you want to save the renamed photos. If not specified, the photos will be stored in the current directory.
+- `ERROR_DIR`: The path to the directory where you want to save the photos that could not be renamed. If not specified, the photos will be stored in the current directory.
+
+Use `PicChrono --help` to see the help message.
+
+### Options
+- `--help`: Show the help message and exit.
+- `--version`: Show the version of PicChrono and exit.
 
 ## :test_tube: Testing
 Explain how to run tests, and provide examples if necessary.
