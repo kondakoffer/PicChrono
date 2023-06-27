@@ -49,37 +49,6 @@ def teardown_module(module):
     shutil.rmtree(TEST_ERROR_DIR)
 
 
-@pytest.mark.skip("Deprecated")
-class TestGroup_RenamerSetup:
-    """Tests for the constructor and classmethods of the Renamer class."""
-
-    @pytest.mark.parametrize(
-        "source_dir,destination_dir,error_dir",
-        [
-            (  # Standard test directories
-                TEST_SOURCE_DIR,
-                TEST_DESTINATION_DIR,
-                TEST_ERROR_DIR,
-            ),
-            # TODO: Test for non existing directories
-            # TODO: Test for unreadable directories
-            # TODO: Test for existing parent directoriy
-            # TODO: Test for root directory (no parent directory)
-            # TODO: Test for unpermitted directories (e.g. system directories, unwritable directories, forbidden characters in directory name)
-            # TODO: Test for alias (~, and other aliases)
-        ],
-    )
-    def test_init(self, source_dir, destination_dir, error_dir):
-        """Test for the constructor of the Renamer class."""
-        renamer = Renamer(source_dir, destination_dir, error_dir)
-        assert renamer.source_dir == os.path.abspath(source_dir)
-        assert renamer.destination_dir == os.path.abspath(destination_dir)
-        assert renamer.error_dir == os.path.abspath(error_dir)
-        assert os.path.exists(renamer.source_dir)
-        assert os.path.exists(renamer.destination_dir)
-        assert os.path.exists(renamer.error_dir)
-
-
 class TestGroup_GetMinimalDateTime:
     """Tests for the _get_minimal_datetime function."""
 
