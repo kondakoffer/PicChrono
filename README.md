@@ -1,15 +1,10 @@
 # PicChrono
 
-<center>
-
 [![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
 [![Code Style](https://img.shields.io/badge/Code%20Style-black-black.svg)](https://github.com/psf/black)
 [![Coverage](./assets/badges/coverage.svg)](./assets/badges/coverage.svg)
 [![Testing](https://img.shields.io/badge/Testing-PyTest-olive.svg)](https://docs.pytest.org/)
 
-</center>
-
------------------
 
 ## Description
 A python package helping you to archive your photos. It renames the photos based on the date and time they were taken.
