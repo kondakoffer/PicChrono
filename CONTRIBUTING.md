@@ -4,6 +4,14 @@ Thank you for your interest in contributing to the PicChrono project!
 
 We welcome contributions from everyone. Before you get started, please take a moment to review the following guidelines.
 
+## Prerequisites
+
+Before you begin, ensure that you have the following prerequisites installed:
+
+- Python (version 3.10 or higher), refer to [python's website](https://www.python.org) to install it.
+- pip, refer to [pip's official documentation](https://pip.pypa.io/en/stable/installing/) to install it.
+- Poetry, refer to [poetry's official documentation](https://python-poetry.org/docs/) to install it.
+
 ## How to Contribute
 
 1. Fork the repository and create a new branch for your contribution.

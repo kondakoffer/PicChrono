@@ -2,6 +2,10 @@
 
 Thank you for contributing to our project! To ensure a positive and inclusive environment, we have established this Code of Conduct. 
 
+## Language
+
+We prefer all communications to be kept in English to ensure that everyone can participate in the discussion.
+
 ## Our Pledge
 
 In the interest of fostering an open and welcoming community, we pledge to:
@@ -41,4 +45,4 @@ Instances of abusive, harassing, or otherwise unacceptable behavior may result i
 
 We are committed to providing a welcoming and inclusive community for all contributors, and we appreciate your cooperation in upholding this Code of Conduct.
 
- Thank you for helping us create a positive and collaborative environment!
+Thank you for helping us create a positive and collaborative environment!
