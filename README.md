@@ -15,14 +15,12 @@
 A python package helping you to archive your photos. It renames the photos based on the date and time they were taken.
 
 ## Prerequisites
-
 Before you begin, ensure that you have the following prerequisites installed:
 
 - Python (version 3.10 or higher), refer to [python's website](https://www.python.org) to install it.
 - pip, refer to [pip's official documentation](https://pip.pypa.io/en/stable/installing/) to install it.
 
 ## Installation
-
 Install the package using pip:
 ```bash
 pip install PicChrono
@@ -34,8 +32,10 @@ pip install git+https://github.com/kondakoffer/PicChrono
 It is recommended to use a virtual environment to install the package (see [here](https://docs.python.org/3/library/venv.html)).
 
 ## Usage
+Once the package is installed, you can use it as a command line tool or as a python package.
 
-Once the package is installed, you can use it as follows:
+### As command line tool
+The intended usage is as command line tool. You can use it as follows:
 ```bash
 PicChrono [OPTIONS] SOURCE_PATH [DESTINATION_DIR] [ERROR_DIR]  
 ```
@@ -43,13 +43,23 @@ PicChrono [OPTIONS] SOURCE_PATH [DESTINATION_DIR] [ERROR_DIR]
 - `DESTINATION_DIR`: The path to the directory where you want to save the renamed photos. If not specified, the photos will be stored in the current directory.
 - `ERROR_DIR`: The path to the directory where you want to save the photos that could not be renamed. If not specified, the photos will be stored in the current directory.
 
-### Options
-
+#### Options
 - `--help`: Show the help message and exit.
 - `-v` or `--version`: Show the version number and exit.
 
-## Troubleshooting
+### As python package
+It is also possible to integrate the package into your own python code by using the typical python import statement:
+```python
+from PicChrono import *
+```
+or 
+```python
+import PicChrono
+```
 
+<!-- For an extended documentation of the package, please refer to ***ADD LINK TO DOCS***. -->
+
+## Troubleshooting
 If you encounter any issues or errors, here are a few troubleshooting tips:
 
 - Double-check that package is installed correctly.
