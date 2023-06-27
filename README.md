@@ -18,7 +18,7 @@ Before you begin, ensure that you have the following prerequisites installed:
 ## Installation
 Install the package using pip:
 ```bash
-pip install PicChrono
+pip install pic-chrono
 ```
 or 
 ```bash
@@ -45,11 +45,11 @@ PicChrono [OPTIONS] SOURCE_PATH [DESTINATION_DIR] [ERROR_DIR]
 ### As python package
 It is also possible to integrate the package into your own python code by using the typical python import statement:
 ```python
-from PicChrono import *
+import pic_chrono
 ```
-or 
+If you only want to use the functionalities with renaming the photos, you can import the `Rename` class:
 ```python
-import PicChrono
+from pic_chrono.renamer import Rename
 ```
 
 <!-- For an extended documentation of the package, please refer to ***ADD LINK TO DOCS***. -->

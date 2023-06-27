@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pic-chrono"
-version = "0.1.0"
+version = "1.0.0"
 description = "A tool to automaticallly rename images to their respective date-time taken"
 authors = ["Valentin Ruben Kondakov <kondakov.valentin@icloud.com>"]
 license = "MIT"
