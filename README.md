@@ -1,15 +1,10 @@
 # PicChrono
 
-<center>
-
 [![License](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
 [![Code Style](https://img.shields.io/badge/Code%20Style-black-black.svg)](https://github.com/psf/black)
 [![Coverage](./assets/badges/coverage.svg)](./assets/badges/coverage.svg)
 [![Testing](https://img.shields.io/badge/Testing-PyTest-olive.svg)](https://docs.pytest.org/)
 
-</center>
-
------------------
 
 ## Description
 A python package helping you to archive your photos. It renames the photos based on the date and time they were taken.
@@ -23,7 +18,7 @@ Before you begin, ensure that you have the following prerequisites installed:
 ## Installation
 Install the package using pip:
 ```bash
-pip install PicChrono
+pip install pic-chrono
 ```
 or 
 ```bash
@@ -50,11 +45,11 @@ PicChrono [OPTIONS] SOURCE_PATH [DESTINATION_DIR] [ERROR_DIR]
 ### As python package
 It is also possible to integrate the package into your own python code by using the typical python import statement:
 ```python
-from PicChrono import *
+import pic_chrono
 ```
-or 
+If you only want to use the functionalities with renaming the photos, you can import the `Rename` class:
 ```python
-import PicChrono
+from pic_chrono.renamer import Rename
 ```
 
 <!-- For an extended documentation of the package, please refer to ***ADD LINK TO DOCS***. -->
