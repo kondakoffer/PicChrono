@@ -27,6 +27,7 @@ class Renamer:
         source_dir: str | os.PathLike = DEFAULT_SOURCE_DIR,
         destination_dir: str | os.PathLike = DEFAULT_DESTINATION_DIR,
         error_dir: str | os.PathLike = DEFAULT_ERROR_DIR,
+        **kwargs,
     ):
         """
         Renames all files in the directory.
@@ -35,12 +36,33 @@ class Renamer:
             os.makedirs(destination_dir)
         if not os.path.exists(error_dir):
             os.makedirs(error_dir)
-        for filename in os.listdir(source_dir):
-            self.rename_image(
-                filepath=os.path.join(source_dir, filename),
-                destination_dir=destination_dir,
-                error_dir=error_dir,
-            )
+        
+        # Absolute paths
+        abs_path_source_dir = os.path.abspath(source_dir)
+        abs_path_destination_dir = os.path.abspath(destination_dir)
+        abs_path_error_dir = os.path.abspath(error_dir)
+        abs_paths = [abs_path_source_dir, abs_path_destination_dir, abs_path_error_dir]
+
+        for f_name in os.listdir(source_dir):
+            f_path = os.path.join(source_dir, f_name)
+            if os.path.isfile(f_path):
+                self.rename_image(
+                    filepath=f_path,
+                    destination_dir=destination_dir,
+                    error_dir=error_dir,
+                )
+            elif os.path.isdir(f_path):
+                if os.path.abspath(f_path) in abs_paths:
+                    # skip the subdirectories if it equals one of the main directories
+                    continue
+                elif kwargs.get("recursive"):
+                    # rename the subdirectories if recursive is True
+                    self.rename(
+                        source_dir=f_path,
+                        destination_dir=os.path.join(destination_dir, f_name),
+                        error_dir=os.path.join(destination_dir, f_name),
+                        **kwargs,
+                    )
         return True
 
     #
