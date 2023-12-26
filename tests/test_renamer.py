@@ -208,7 +208,7 @@ class TestGroup_Rename:
     )
     def test_rename(self, source_dir, destination_dir, error_dir):
         assert renamer.rename(
-            source_dir=source_dir, destination_dir=destination_dir, error_dir=error_dir
+            source_dir=source_dir, destination_dir=destination_dir, error_dir=error_dir, recursive=True
         )
         assert os.path.exists(TEST_DESTINATION_DIR)
         assert os.path.exists(TEST_ERROR_DIR)
