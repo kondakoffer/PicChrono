@@ -63,6 +63,9 @@ class Renamer:
                         error_dir=os.path.join(destination_dir, f_name),
                         **kwargs,
                     )
+                else:
+                    # skip the subdirectories if recursive is False
+                    continue
         return True
 
     #

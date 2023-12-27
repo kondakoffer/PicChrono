@@ -55,23 +55,25 @@ def rename_dir_callback(
     source_dir: str,
     destination_dir: str = os.curdir,
     error_dir: str = os.curdir,
+    **kwargs,
 ) -> None:
     """Rename all images in a directory."""
     Renamer().rename(
         source_dir=source_dir,
         destination_dir=destination_dir,
         error_dir=error_dir,
+        **kwargs,
     )
 
 
 @app.command()
 def main(
-    options: Optional[str] = typer.Option(
-        None,
-        "-o",
-        "--options",
-        help="Here should be the options for the ImageRename command.",
-    ),
+    # options: Optional[str] = typer.Option(
+    #     None,
+    #     "-o",
+    #     "--options",
+    #     help="Here should be the options for the ImageRename command.",
+    # ),
     print_version: bool = typer.Option(
         None,
         "-v",
@@ -92,27 +94,34 @@ def main(
         os.curdir,
         help="Path to the directory where the files which could not be renamed should be stored.",
     ),
+    recursive: bool = typer.Option(
+        False,
+        "-r",
+        "--recursive",
+        help="Rename files in subdirectories recursively.",
+    ),
 ) -> None:
     """Rename images based on their date-time taken EXIF data."""
-    if options:
-        # console.print(f"You passed an option: {options}")
-        pass
-    else:
-        if not os.path.exists(source_path):
-            console.print(f"[bold red]Source path does not exist:[/]\n{source_path}")
-            raise typer.Exit(code=1)
-        if os.path.isfile(source_path):
-            rename_image_callback(
-                filepath=source_path,
-                destination_dir=destination_dir,
-                error_dir=error_dir,
-            )
-        elif os.path.isdir(source_path):
-            rename_dir_callback(
-                source_dir=source_path,
-                destination_dir=destination_dir,
-                error_dir=error_dir,
-            )
+    # if options:
+    #     # console.print(f"You passed an option: {options}")
+    #     pass
+    # else:
+    if not os.path.exists(source_path):
+        console.print(f"[bold red]Source path does not exist:[/]\n{source_path}")
+        raise typer.Exit(code=1)
+    if os.path.isfile(source_path):
+        rename_image_callback(
+            filepath=source_path,
+            destination_dir=destination_dir,
+            error_dir=error_dir,
+        )
+    elif os.path.isdir(source_path):
+        rename_dir_callback(
+            source_dir=source_path,
+            destination_dir=destination_dir,
+            error_dir=error_dir,
+            recursive=recursive
+        )
 
 
 if __name__ == "__main__":
