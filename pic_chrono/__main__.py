@@ -68,12 +68,6 @@ def rename_dir_callback(
 
 @app.command()
 def main(
-    # options: Optional[str] = typer.Option(
-    #     None,
-    #     "-o",
-    #     "--options",
-    #     help="Here should be the options for the ImageRename command.",
-    # ),
     print_version: bool = typer.Option(
         None,
         "-v",
@@ -102,10 +96,9 @@ def main(
     ),
 ) -> None:
     """Rename images based on their date-time taken EXIF data."""
-    # if options:
-    #     # console.print(f"You passed an option: {options}")
-    #     pass
-    # else:
+    if print_version:
+        version_callback(print_version)
+        return
     if not os.path.exists(source_path):
         console.print(f"[bold red]Source path does not exist:[/]\n{source_path}")
         raise typer.Exit(code=1)
